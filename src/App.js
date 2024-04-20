@@ -1,61 +1,52 @@
-import React from 'react'; 
+import React, { useState } from 'react'; 
 import './App.css';
-
-
-// - Here we have an array of objects
-// - We might see this when we have multiple rows of results from our database or API
-const beans = [
-  { id: 1, title: 'Arabica', origin: 'Native to Ethiopia', flavor: 'Varaible-distinctly not bitter', bestuse: 'Brewed coffee', isBrewedCoffe: true },
-  { id: 2, title: 'Robusta', origin: 'Native to sub-Saharan Africa', flavor: 'Bitter, woody or nutty', bestuse: 'Coffee blends and espresso', isBrewedCoffe: false  },
-  { id: 3, title: 'Excelsa', origin: 'South Asia', flavor: 'Complex, tart, fruity and dark', bestuse: 'Brewed coffee and blends', isBrewedCoffe: true },
-  { id: 4, title: 'Liberica', origin: 'South Asia', flavor: 'Unusual, nutty and woody', bestuse: 'Brewed coffee and desserts', isBrewedCoffe: true  },
-];
-
-
-function CoffeTypes() {
-  return (
-    <div>
-      {beans.map(bean => <BeanDetail key={bean.id} bean={bean} />)}
-    </div>
-  );
-}
-
-function BeanDetail({bean}) {
-  return (
-    <div>
-      <BeanTitle bean={bean} />
-      <ul>
-        <li>Origin: {bean.origin}</li>
-        <li>Flavor: {bean.flavor}</li>
-        <li>Best Used By: {bean.bestuse}</li>
-      </ul>
-    </div>
-  );
-}
-
-function BeanTitle({bean}) {
-  return (
-    <>
-      <h2 style={{
-        color: bean.isBrewedCoffe ? 'brown' : 'red'
-      }}>{bean.title}</h2>
-      
-    </>
-  );
-}
+import { GoogleMap, LoadScript, useJsApiLoader } from '@react-google-maps/api';
 
 
 
-// This is the main component in the file
-// It's called below using the 'export default' keywords
+const containerStyle = {
+  width: '40vw', 
+  height: '40vh',
+  margin: '100px'
+};
+
+const center = {
+  lat: 42.74, 
+  lng: -84.55  
+};
+
+
 function App() {
+
+  const handleMapClick = (event) => {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, async (results) => {
+      for (const component of results[0].address_components) {
+        if (component.types.includes("country")) {
+          const countryName = component.long_name;
+          break;
+        }
+      }
+    });
+  };
+
+  
+
   return (
-    // Use className for CSS and HTML classes
-    <div className="App">
-      <CoffeTypes />
+    <div>
+      <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={10}
+      onClick={handleMapClick}
+      >
+      </GoogleMap>
     </div>
+    
   );
 }
 
-// The export default keywords specifiy the main component in the file
 export default App;
