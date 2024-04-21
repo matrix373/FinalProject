@@ -17,6 +17,26 @@ const center = {
 
 
 function App() {
+  const [currencyConverter, setCurrencyConverter] = useState('');
+
+  const getCurrencyCode = async (countryISOCode) => {  
+
+    const data = await fetch(`https://api-bdc.net/data/country-info?code=${countryISOCode}&localityLanguage=en&key=bdc_7fe4975bd35841baa0e5561160caa837`);
+    if(data.ok) {
+      const dataSet = await data.json();
+      return dataSet.currency.code;
+    }
+  };
+
+  const convertCurrency = async (currencyCode) => {
+    const data = await fetch(`https://api.currencyfreaks.com/v2.0/rates/latest?apikey=6583d5d1ef914621a7720f63f5b3b4e9&symbols=${currencyCode},USD`);
+    if(data.ok) {
+      const dataSet = await data.json();
+      const rate = dataSet.rates[currencyCode];
+      const displayRate = parseFloat(rate).toFixed(5);
+      return `1 USD = ${displayRate} ${currencyCode}`;
+    }
+  }
 
   const handleMapClick = (event) => {
     const lat = event.latLng.lat();
@@ -27,6 +47,12 @@ function App() {
       for (const component of results[0].address_components) {
         if (component.types.includes("country")) {
           const countryName = component.long_name;
+          const countryISOCode = component.short_name;
+
+          const currencyCode = await getCurrencyCode(countryISOCode);
+          const exchangeRate = await convertCurrency(currencyCode);
+          setCurrencyConverter(exchangeRate);
+
           break;
         }
       }
@@ -44,6 +70,9 @@ function App() {
       onClick={handleMapClick}
       >
       </GoogleMap>
+      <div>
+        <p>{currencyConverter}</p>
+      </div>
     </div>
     
   );
