@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+
+.currency-header {
+  background-color: #091540; 
+}
+
+.static-background {
+  background-color: #ABD2FA;
+}
+
+.response-backgournd {
+  background-color: #3D518C;
+}
