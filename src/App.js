@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './App.css';
 import { GoogleMap, LoadScript} from '@react-google-maps/api';
 
-
 const containerStyle = {
   width: '100%', 
   height: '100%',
@@ -80,6 +79,7 @@ function App() {
             <div className="info-card text-white response-backgournd p-3 shadow rounded d-flex flex-column justify-content-center align-items-center" style={{ minHeight: '350px' }}>
               <h2 className="my-2 fs-1 fw-bold">{countryGetter}</h2>
               <p className="lead my-2 fs-2">{currencyConverter}</p>
+              <div className='mask' style={{ backgroundColor: 'rgba(57, 192, 237, 0.2)' }}></div>
             </div>
           </div>
           <div className="col-md-7" style={{ height: `50vh` }}>        
